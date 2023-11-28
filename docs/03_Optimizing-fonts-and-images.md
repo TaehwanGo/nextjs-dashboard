@@ -22,3 +22,27 @@ export const inter = Inter({ subsets: ['latin'] });
 ```
 
 ## Practice: Adding a secondary font
+
+## Why optimize images?
+
+- Next.js는 최상위 /public 폴더 아래에 이미지와 같은 정적 자산을 제공할 수 있습니다. /public 내의 파일은 애플리케이션에서 참조될 수 있습니다.
+- However, this means you have to manually:
+  - Ensure your image is responsive on different screen sizes.
+  - Specify image sizes for different devices.
+  - Prevent layout shift as the images load.
+  - Lazy load images that are outside the user's viewport.
+- 이미지 최적화는 그 자체로 전문 분야로 간주될 수 있는 웹 개발의 큰 주제입니다. 이러한 최적화를 수동으로 구현하는 대신 next/image 구성 요소를 사용하여 이미지를 자동으로 최적화할 수 있습니다.
+
+## The `<Image>` component
+
+- The `<Image>` Component is an extension of the HTML `<img>` tag, and comes with automatic image optimization, such as:
+  - Preventing layout shift automatically when images are loading.
+  - Resizing images to avoid shipping large images to devices with a smaller viewport.
+  - Lazy loading images by default (images load as they enter the viewport).
+  - Serving images in modern formats, like WebP and AVIF, when the browser supports it.
+
+## Adding the desktop hero image
+
+- 레이아웃 변경을 방지하려면 이미지의 너비와 높이를 설정하는 것이 좋습니다.
+
+## Practice: Adding the mobile hero image
