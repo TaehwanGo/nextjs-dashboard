@@ -27,9 +27,9 @@ Here's an overview of features you'll learn about in this course:
 ## Chapters
 
 - [x] 1. Getting Started
-- [ ] 2. CSS Styling
-- [ ] 3. Optimizing Fonts and Images
-- [ ] 4. Creating Layouts and Pages
+- [x] 2. CSS Styling
+- [x] 3. Optimizing Fonts and Images
+- [x] 4. Creating Layouts and Pages
 - [ ] 5. Navigating Between Pages
 - [ ] 6. Setting Up Your Database
 - [ ] 7. Fetching Data
