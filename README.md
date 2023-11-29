@@ -31,7 +31,7 @@ Here's an overview of features you'll learn about in this course:
 - [x] 3. Optimizing Fonts and Images
 - [x] 4. Creating Layouts and Pages
 - [x] 5. Navigating Between Pages
-- [ ] 6. Setting Up Your Database
+- [x] 6. Setting Up Your Database
 - [ ] 7. Fetching Data
 - [ ] 8. Static and Dynamic Rendering
 - [ ] 9. Streaming
