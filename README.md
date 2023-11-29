@@ -30,7 +30,7 @@ Here's an overview of features you'll learn about in this course:
 - [x] 2. CSS Styling
 - [x] 3. Optimizing Fonts and Images
 - [x] 4. Creating Layouts and Pages
-- [ ] 5. Navigating Between Pages
+- [x] 5. Navigating Between Pages
 - [ ] 6. Setting Up Your Database
 - [ ] 7. Fetching Data
 - [ ] 8. Static and Dynamic Rendering
