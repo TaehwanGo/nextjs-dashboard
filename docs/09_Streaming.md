@@ -35,3 +35,11 @@
 - We can change this with [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups). Create a new folder called `/(overview)` inside the dashboard folder. Then, move your `loading.tsx` and `page.tsx` files inside the folder.
 - Route groups allow you to organize files into logical groups without affecting the URL path structure.
 - When you create a new folder using parentheses (), the name won't be included in the URL path. So `/dashboard/(overview)/page.tsx` becomes `/dashboard`.
+
+## Streaming a component
+
+- So far, you're streaming a whole page. But, instead, you can be more granular and stream specific components using React Suspense.
+- Suspense allows you to defer rendering parts of your application until some condition is met (e.g. data is loaded). You can wrap your dynamic components in Suspense.
+  - 그런 다음 dynamic component가 로드되는 동안 표시할 대체(fallback) component를 전달합니다.
+- 부모에서 데이터를 가져와서 자식에게 전달하는 방식에서 자식에서 직접 데이터를 호출하도록하고
+  - 자식 컴포넌트가 데이터를 가져오는 동안 fallback UI를 표시합니다.
