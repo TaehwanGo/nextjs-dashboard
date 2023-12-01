@@ -45,3 +45,30 @@
   - 자식 컴포넌트가 데이터를 가져오는 동안 fallback UI를 표시합니다.
 
 ## Practice: Streaming `<LatestInvoices>`
+
+## Grouping components
+
+- 각 개별 카드에 대한 데이터를 가져올 수 있지만 이로 인해 카드가 로드될 때 팝업 효과가 발생할 수 있으며 이는 사용자에게 시각적으로 불편할 수 있습니다.
+- 더 많은 시차 효과를 생성하려면 래퍼 구성 요소를 사용하여 카드를 그룹화할 수 있습니다. 즉, 정적 `<Sidebar/>`가 먼저 표시되고 그다음에 카드 등이 표시됩니다.
+
+- (내 생각) 사실 각 개별 컴포넌트에서 데이터를 직접 조회하게 하고 Suspense를 감싸는 방식은 좋은지 잘 모르겠다
+  - 데이터를 외부에서 동적으로 주입하는 방식이 더 좋을 것 같다.
+  - Wrapper에서 데이터를 가져오고 각각의 컴포넌트에 넣어주는 방식이 좋은 것 같다. 대신 wrapper는 Suspense로 감싸야 한다
+
+## Deciding where to place your Suspense boundaries
+
+- Suspense 경계를 배치하는 위치는 다음 몇 가지 사항에 따라 달라집니다.
+
+  - 페이지가 스트리밍될 때 사용자가 페이지를 경험하기를 원하는 방식입니다.
+  - 어떤 콘텐츠에 우선순위를 두고 싶은지.
+  - If the components rely on data fetching.
+
+- Don't worry. There isn't a right answer.
+  - You could stream the whole page like we did with loading.tsx... but that may lead to a longer loading time if one of the components has a slow data fetch.
+  - You could stream every component individually... but that may lead to UI popping into the screen as it becomes ready.
+  - You could also create a staggered effect by streaming page sections. But you'll need to create wrapper components.
+- 일반적으로 데이터 가져오기를 필요한 구성 요소로 이동한 다음 Suspense에서 해당 구성 요소를 래핑하는 것이 좋습니다.
+
+## Looking ahead
+
+- 다음 장에서는 스트리밍을 염두에 두고 구축된 새로운 Next.js 렌더링 모델인 Partial Prerendering에 대해 알아봅니다.
