@@ -28,3 +28,10 @@
   - 3. 사용자는 다른 페이지로 이동하기 전에 페이지 로드가 완료될 때까지 기다릴 필요가 없습니다(this is called interruptable navigation).
 
 ## Adding loading skeletons
+
+## Fixing the loading skeleton bug with route groups
+
+- Right now, your loading skeleton will apply to the invoices and customers pages as well.
+- We can change this with [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups). Create a new folder called `/(overview)` inside the dashboard folder. Then, move your `loading.tsx` and `page.tsx` files inside the folder.
+- Route groups allow you to organize files into logical groups without affecting the URL path structure.
+- When you create a new folder using parentheses (), the name won't be included in the URL path. So `/dashboard/(overview)/page.tsx` becomes `/dashboard`.
