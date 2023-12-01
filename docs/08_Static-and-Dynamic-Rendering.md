@@ -30,10 +30,17 @@
 
 ## Making the dashboard dynamic
 
-- 참고: 불안정한\_noStore는 실험적인 API이며 향후 변경될 수 있습니다. 자신의 프로젝트에서 안정적인 API를 사용하려는 경우 [Segment Config Option](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config)
+- 참고: `unstable_noStore`는 실험적인 API이며 향후 변경될 수 있습니다. 자신의 프로젝트에서 안정적인 API를 사용하려는 경우 [Segment Config Option](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config)
 
 ```ts
 export const dynamic = 'force-dynamic';
 ```
 
 을 사용할 수도 있습니다.
+
+## Simulating a slow data fetch
+
+- 만약 여러 요청 가운데 하나가 느리다면?
+  - 시뮬레이션을 통해 확인해보자.
+  - 느리게 만든 만큼 전체 페이지 로드가 느려진다.
+- 다음 챕터에서 개선해보자
