@@ -27,3 +27,13 @@
   - Real-Time Data : Dynamic rendering allows your application to display real-time or frequently updated data. This is ideal for applications where data changes often.
   - User-Specific Content : It's easier to serve personalized content, such as dashboards or user profiles, and update the data based on user interaction.
   - Request Time Information : Dynamic rendering allows you to access information that can only be known at request time, such as cookies or the URL search parameters.
+
+## Making the dashboard dynamic
+
+- 참고: 불안정한\_noStore는 실험적인 API이며 향후 변경될 수 있습니다. 자신의 프로젝트에서 안정적인 API를 사용하려는 경우 [Segment Config Option](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config)
+
+```ts
+export const dynamic = 'force-dynamic';
+```
+
+을 사용할 수도 있습니다.
