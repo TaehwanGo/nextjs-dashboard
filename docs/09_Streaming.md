@@ -43,3 +43,5 @@
   - 그런 다음 dynamic component가 로드되는 동안 표시할 대체(fallback) component를 전달합니다.
 - 부모에서 데이터를 가져와서 자식에게 전달하는 방식에서 자식에서 직접 데이터를 호출하도록하고
   - 자식 컴포넌트가 데이터를 가져오는 동안 fallback UI를 표시합니다.
+
+## Practice: Streaming `<LatestInvoices>`
