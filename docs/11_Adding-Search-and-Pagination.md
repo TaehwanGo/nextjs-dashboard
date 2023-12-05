@@ -74,3 +74,49 @@ However, since you're not using state, you can use defaultValue. This means the 
 
 - 모든 입력에 대해 서버에 요청을 보내는 대신, 입력이 멈추면 서버에 요청을 보내는 것이 좋다.
 - 공식문서에서는 'use-debounce' 라이브러리를 사용했지만 나는 lodash의 debounce를 사용했다.
+
+## Adding pagination
+
+- 데이터베이스 비밀이 노출될 수 있으므로 클라이언트에서 데이터를 가져오고 싶지 않습니다(API 계층을 사용하지 않는다는 점을 기억하세요). 대신 서버에서 데이터를 가져와서 컴포넌트에 prop으로 전달할 수 있습니다.
+
+```tsx
+// /app/ui/invoices/pagination.tsx
+'use client';
+
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import clsx from 'clsx';
+import Link from 'next/link';
+import { generatePagination } from '@/app/lib/utils';
+import { usePathname, useSearchParams } from 'next/navigation';
+
+export default function Pagination({ totalPages }: { totalPages: number }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+
+  // ...
+}
+```
+
+- Here's a breakdown of what's happening:
+
+  - `createPageURL` creates an instance of the current search parameters.
+  - Then, it updates the "page" parameter to the provided page number.
+  - Finally, it constructs the full URL using the pathname and updated search parameters.
+
+- 마지막으로 사용자가 새 검색어를 입력하면 페이지 번호를 1로 재설정하려고 합니다. `<Search>` 컴포넌트에서 handlerSearch 함수를 업데이트하면 됩니다.
+
+## Summary
+
+- Congratulations! You've just implemented search and pagination using URL Params and Next.js APIs.
+- To summarize, in this chapter:
+  - You've handled search and pagination with URL search parameters instead of client state.
+  - You've fetched data on the server.
+  - You're using the useRouter router hook for smoother, client-side transitions.
+- 이러한 패턴은 클라이언트 측 React로 작업할 때 익숙했던 패턴과 다르지만 이제 URL 검색 매개변수를 사용하고 이 상태를 서버로 가져오는 것의 이점을 더 잘 이해할 수 있기를 바랍니다.
