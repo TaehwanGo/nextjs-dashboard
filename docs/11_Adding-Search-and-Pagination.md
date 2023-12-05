@@ -36,3 +36,41 @@
   - 4. Update the table to reflect the search query.
 
 ## 1. Capture the user's input
+
+- onChange에 대한 handler를 만들어서 input의 value를 업데이트 해준다.
+
+## 2. Update the URL with the search params
+
+- You can use Next.js's useRouter and usePathname hooks to update the URL.
+
+```tsx
+replace(${pathname}?${params.toString()})
+```
+
+- updates the URL with the user's search data. For example, /dashboard/invoices?query=lee if the user searches for "Lee".
+- The URL is updated without reloading the page, thanks to Next.js's client-side navigation (which you learned about in the chapter on navigating between pages.
+
+## 3. Keep the URL and input in sync
+
+### defaultValue vs. value / Controlled vs. Uncontrolled
+
+If you're using state to manage the value of an input, you'd use the value attribute to make it a controlled component. This means React would manage the input's state.
+
+However, since you're not using state, you can use defaultValue. This means the native input will manage its own state. This is okay since you're saving the search query to the URL instead of state.
+
+## 4. Updating the table
+
+- 마지막으로 검색 쿼리를 반영하도록 테이블 구성 요소를 업데이트해야 합니다.
+
+- Page components는 searchParams 이라 불리는 prop을 받는다
+
+  - Page 컴포넌트가 받는 props -> https://nextjs.org/docs/app/api-reference/file-conventions/page
+    - params: Object - The route parameters for the page, if any. For example, for the route /posts/[pid], we'd receive { pid: 'abc' } as params.
+    - searchParams: Object - The query string parameters for the page, if any. For example, for the route /posts?foo=bar, we'd receive { foo: 'bar' } as searchParams.
+
+- input값을 입력하면 onChange에서 replace를 통해 URL을 업데이트하고, Page 컴포넌트에서 searchParams를 받아서 데이터를 가져온다.
+
+## Best practice: Debouncing
+
+- 모든 입력에 대해 서버에 요청을 보내는 대신, 입력이 멈추면 서버에 요청을 보내는 것이 좋다.
+- 공식문서에서는 'use-debounce' 라이브러리를 사용했지만 나는 lodash의 debounce를 사용했다.
