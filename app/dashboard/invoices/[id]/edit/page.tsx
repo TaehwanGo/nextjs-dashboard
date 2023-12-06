@@ -1,6 +1,7 @@
 import Form from '@/app/ui/invoices/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
+import { notFound } from 'next/navigation';
 
 // 1. Create a Dynamic Route Segment with the invoice id
 export default async function InvoiceEditPage({
@@ -16,6 +17,9 @@ export default async function InvoiceEditPage({
     fetchInvoiceById(id),
     fetchCustomers(),
   ]);
+  if (!invoice) {
+    notFound();
+  }
   return (
     <main>
       <Breadcrumbs
