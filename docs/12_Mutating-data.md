@@ -126,3 +126,62 @@ export async function createInvoice(formData: FormData) {
 #### Creating new dates
 
 - Finally, let's create a new date with the format "YYYY-MM-DD" for the invoice's creation date
+
+### 5. Inserting the data into your database
+
+- Now that you have all the values you need for your database, you can create an SQL query to insert the new invoice into your database and pass in the variables
+
+### 6. Revalidate and redirect
+
+- Next.js has a [Client-side Router Cache](https://nextjs.org/docs/app/building-your-application/caching#router-cache) that stores the route segments in the user's browser for a time. Along with prefetching, this cache ensures that users can quickly navigate between routes while reducing the number of requests made to the server.
+- Since you're updating the data displayed in the invoices route, you want to clear this cache and trigger a new request to the server.
+- You can do this
+
+```ts
+'use server';
+
+import { z } from 'zod';
+import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
+
+// ...
+
+export async function createInvoice(formData: FormData) {
+  const { customerId, amount, status } = CreateInvoice.parse({
+    customerId: formData.get('customerId'),
+    amount: formData.get('amount'),
+    status: formData.get('status'),
+  });
+  const amountInCents = amount * 100;
+  const date = new Date().toISOString().split('T')[0];
+
+  await sql`
+    INSERT INTO invoices (customer_id, amount, status, date)
+    VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+  `;
+
+  revalidatePath('/dashboard/invoices');
+}
+```
+
+- Once the database has been updated, the /dashboard/invoices path will be revalidated, and fresh data will be fetched from the server.
+
+- At this point, you also want to redirect the user back to the /dashboard/invoices page. You can do this with the redirect function from Next.js:
+
+```ts
+'use server';
+
+import { z } from 'zod';
+import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+// ...
+
+export async function createInvoice(formData: FormData) {
+  // ...
+
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
+}
+```

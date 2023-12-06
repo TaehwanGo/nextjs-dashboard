@@ -1,6 +1,9 @@
 'use server';
 
 import { z } from 'zod';
+import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -34,4 +37,12 @@ export async function createInvoice(formData: FormData) {
   const date = new Date().toISOString().split('T')[0];
   // const date = new Date().toISOString();
   // console.log('date', date);
+
+  await sql`
+    INSERT INTO invoices (customer_id, amount, status, date)
+    VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+  `; // handling error later
+
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
 }
