@@ -185,3 +185,75 @@ export async function createInvoice(formData: FormData) {
   redirect('/dashboard/invoices');
 }
 ```
+
+## Updating an invoice
+
+- 생성과 유사하지만 업데이트할 id를 넘겨야 합니다
+
+- These are the steps you'll take to update an invoice
+  - 1. Create a new dynamic route segment with the invoice id.
+  - 2. Read the invoice id from the page params.
+  - 3. Fetch the specific invoice from your database.
+  - 4. Pre-populate the form with the invoice data.
+  - 5. Update the invoice data in your database.
+
+### 1. Create a Dynamic Route Segment with the invoice id
+
+- You can create dynamic route segments by wrapping a folder's name in square brackets.
+  - e.g. [id], [post] or [slug].
+
+### 2. Read the invoice id from page params
+
+- This form should be pre-populated with a defaultValue for the customer's name, invoice amount, and status.
+  - 이 양식은 고객 이름, 송장 금액 및 상태에 대한 defaultValue로 미리 채워져 있어야 합니다.
+
+### 3. Fetch the specific invoice
+
+#### UUIDs vs. Auto-incrementing Keys
+
+We use UUIDs instead of incrementing keys (e.g., 1, 2, 3, etc.). This makes the URL longer; however, UUIDs eliminate the risk of ID collision, are globally unique, and reduce the risk of enumeration attacks - making them ideal for large databases.
+
+However, if you prefer cleaner URLs, you might prefer to use auto-incrementing keys.
+
+### 4. Pass the id to the Server Action
+
+```ts
+// /app/lib/actions.ts
+
+// Use Zod to update the expected types
+const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+
+// ...
+
+export async function updateInvoice(id: string, formData: FormData) {
+  const { customerId, amount, status } = UpdateInvoice.parse({
+    customerId: formData.get('customerId'),
+    amount: formData.get('amount'),
+    status: formData.get('status'),
+  });
+
+  const amountInCents = amount * 100;
+
+  await sql`
+    UPDATE invoices
+    SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+    WHERE id = ${id}
+  `;
+
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
+}
+```
+
+Similarly to the createInvoice action, here you are:
+
+- 1. Extracting the data from formData.
+- 2. Validating the types with Zod.
+- 3. Converting the amount to cents.
+- 4. Passing the variables to your SQL query.
+- 5. Calling revalidatePath to clear the client cache and make a new server request.
+- 6. Calling redirect to redirect the user to the invoice's page.
+
+#### Note
+
+Using a hidden input field in your form also works (e.g. `<input type="hidden" name="id" value={invoice.id} />`). However, the values will appear as full text in the HTML source, which is not ideal for sensitive data like IDs.
