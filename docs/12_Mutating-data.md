@@ -257,3 +257,23 @@ Similarly to the createInvoice action, here you are:
 #### Note
 
 Using a hidden input field in your form also works (e.g. `<input type="hidden" name="id" value={invoice.id} />`). However, the values will appear as full text in the HTML source, which is not ideal for sensitive data like IDs.
+
+## Deleting an invoice
+
+```ts
+// /app/lib/actions.ts
+
+export async function deleteInvoice(id: string) {
+  await sql`DELETE FROM invoices WHERE id = ${id}`;
+  revalidatePath('/dashboard/invoices');
+}
+```
+
+- 이 작업은 /dashboard/invoices 경로에서 호출되므로 리디렉션을 호출할 필요가 없습니다.
+- revalidatePath를 호출하면 새 서버 요청이 트리거되고 테이블이 다시 렌더링됩니다.
+
+## Further reading
+
+- 이 장에서는 서버 작업(Server Actions)을 사용하여 데이터를 변경하는 방법을 배웠습니다. 또한 revalidatePath API를 사용하여 Next.js 캐시의 유효성을 다시 검사하고 사용자를 새 페이지로 리디렉션하도록 리디렉션하는 방법도 배웠습니다.
+
+- You can also read more about [security with Server Actions](https://nextjs.org/blog/security-nextjs-server-components-actions) for additional learning.
