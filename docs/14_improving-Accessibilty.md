@@ -41,3 +41,36 @@
 
 - The fields are properly styled to show an outline when they are in focus.
 - This is critical for accessibility as it visually indicates the active element on the page, helping both keyboard and screen reader users to understand where they are on the form. You can verify this by pressing tab.
+
+## Form validation
+
+### Client-side validation
+
+- input tag에 required 속성을 추가하면 브라우저가 자동으로 필수 입력 필드를 검증합니다.
+
+### Server-side validation
+
+- By validating forms on the server, you can:
+
+  - Ensure your data is in the expected format before sending it to your database.
+  - Reduce the risk of malicious users bypassing client-side validation.
+  - Have one source of truth for what is considered valid data.
+
+- useFormState hook:
+
+  - Takes two arguments: (action, initialState).
+  - Returns two values: [state, dispatch] - the form state, and a dispatch function (similar to useReducer)
+
+- Pass your createInvoice action as an argument of useFormState, and inside your `<form action={}>` attribute, call dispatch.
+
+#### Zod safeParse
+
+- safeParse() will return an object containing either a success or error field. This will help handle validation more gracefully without having put this logic inside the try/catch block.
+
+#### labels
+
+- `aria-describedby="customer-error"`: This establishes a relationship between the select element and the error message container. It indicates that the container with `id="customer-error"` describes the select element. Screen readers will read this description when the user interacts with the select box to notify them of errors.
+
+- `id="customer-error"`: This id attribute uniquely identifies the HTML element that holds the error message for the select input. This is necessary for aria-describedby to establish the relationship.
+
+- `aria-live="polite"`: The screen reader should politely notify the user when the error inside the div is updated. When the content changes (e.g. when a user corrects an error), the screen reader will announce these changes, but only when the user is idle so as not to interrupt them.
