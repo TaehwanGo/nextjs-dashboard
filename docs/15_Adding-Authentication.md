@@ -205,3 +205,10 @@ export const { auth, signIn, signOut } = NextAuth({
   ],
 });
 ```
+
+## Updating the login form
+
+- Now you need to connect the auth logic with your login form.
+- NextAuth errors : https://authjs.dev/reference/core/errors/
+- Finally, in your login-form.tsx component, you can use React's useFormState to call the server action and handle form errors
+  and use useFormStatus to handle the pending state of the form:
