@@ -79,4 +79,129 @@ export const authConfig = {
 - You can use the pages option to specify the route for custom sign-in, sign-out, and error pages.
   - 이는 필수는 아니지만 페이지 옵션에 signIn: '/login'을 추가하면 사용자는 NextAuth.js 기본 페이지가 아닌 사용자 정의 로그인 페이지로 리디렉션됩니다.
 
-continue -> Protecting your routes with Next.js Middleware
+## Protecting your routes with Next.js Middleware
+
+```ts
+// /auth.config.ts
+
+import type { NextAuthConfig } from 'next-auth';
+
+export const authConfig = {
+  pages: {
+    signIn: '/login',
+  },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/dashboard', nextUrl));
+      }
+      return true;
+    },
+  },
+  providers: [], // Add providers with an empty array for now
+} satisfies NextAuthConfig;
+```
+
+- The authorized callback is used to verify if the request is authorized to access a page via Next.js Middleware.
+- It is called before a request is completed, and it receives an object with the auth and request properties.
+  - The auth property contains the user's session,
+  - and the request property contains the incoming request.
+- The providers option is an array where you list different login options.
+
+  - You'll learn more about it in the [Adding the Credentials provider](https://nextjs.org/learn/dashboard-app/adding-authentication#adding-the-credentials-provider) section.
+
+- Next, you will need to import the `authConfig` object into a Middleware file. In the root of your project, create a file called `middleware.ts` and paste the following code:
+
+```ts
+import NextAuth from 'next-auth';
+import { authConfig } from './auth.config';
+
+export default NextAuth(authConfig).auth;
+
+export const config = {
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+};
+```
+
+- You're also using the matcher option from Middleware to specify that it should run on specific paths.
+- 이 작업에 미들웨어를 사용하면 미들웨어가 인증을 확인할 때까지 보호된 경로가 렌더링을 시작하지 않아 애플리케이션의 보안과 성능이 모두 향상된다는 이점이 있습니다.
+
+## Password hashing
+
+- You will need to create a separate file for the bcrypt package. This is because bcrypt relies on Node.js APIs not available in Next.js Middleware.
+
+## Adding the Credentials provider
+
+```ts
+import NextAuth from 'next-auth';
+import { authConfig } from './auth.config';
+import Credentials from 'next-auth/providers/credentials';
+
+export const { auth, signIn, signOut } = NextAuth({
+  ...authConfig,
+  providers: [Credentials({})],
+});
+```
+
+- Credentials provider를 사용하면 사용자가 사용자 이름과 비밀번호를 사용하여 로그인할 수 있습니다.
+
+#### Good to know
+
+- Although we're using the Credentials provider, it's generally recommended to use alternative providers such as [OAuth](https://authjs.dev/getting-started/providers/oauth-tutorial) or [email](https://authjs.dev/getting-started/providers/email-tutorial) providers. See the [NextAuth.js docs](https://authjs.dev/getting-started/providers) for a full list of options.
+
+## Adding the sign in functionality
+
+```ts
+import NextAuth from 'next-auth';
+import { authConfig } from './auth.config';
+import Credentials from 'next-auth/providers/credentials';
+import { z } from 'zod';
+import { sql } from '@vercel/postgres';
+import type { User } from '@/app/lib/definitions';
+import bcrypt from 'bcrypt';
+
+async function getUser(email: string): Promise<User | undefined> {
+  try {
+    const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
+    return user.rows[0];
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
+
+export const { auth, signIn, signOut } = NextAuth({
+  ...authConfig,
+  providers: [
+    Credentials({
+      // You can use the authorize function to handle the authentication logic.
+      async authorize(credentials) {
+        // Similarly to Server Actions, you can use zod to validate the email and password before checking if the user exists in the database
+        const parsedCredentials = z
+          .object({ email: z.string().email(), password: z.string().min(6) })
+          .safeParse(credentials);
+
+        if (parsedCredentials.success) {
+          const { email, password } = parsedCredentials.data;
+          const user = await getUser(email);
+          if (!user) return null;
+          const passwordsMatch = await bcrypt.compare(password, user.password);
+
+          if (passwordsMatch) {
+            return user;
+          }
+        }
+
+        console.log('Invalid credentials');
+        return null;
+      },
+    }),
+  ],
+});
+```
