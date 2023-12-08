@@ -212,3 +212,14 @@ export const { auth, signIn, signOut } = NextAuth({
 - NextAuth errors : https://authjs.dev/reference/core/errors/
 - Finally, in your login-form.tsx component, you can use React's useFormState to call the server action and handle form errors
   and use useFormStatus to handle the pending state of the form:
+
+## Adding the logout functionality
+
+- To add the logout functionality to `<SideNav />`, call the signOut function from auth.ts in your `<form>` element
+
+## Try it out
+
+- Now, try it out. You should be able to log in and out of your application using the following credentials:
+
+Email: user@nextmail.com
+Password: 123456
