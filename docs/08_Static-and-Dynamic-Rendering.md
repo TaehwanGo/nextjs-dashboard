@@ -1,5 +1,7 @@
 # 8. Static and Dynamic Rendering
 
+- https://nextjs.org/learn/dashboard-app/static-and-dynamic-rendering
+
 ## In this chapter
 
 - What static rendering is and how it can improve your application's performance.

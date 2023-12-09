@@ -1,5 +1,7 @@
 # 10. Partial Prerendering (Optional)
 
+- https://nextjs.org/learn/dashboard-app/partial-prerendering
+
 - Partial Prerendering is an experimental feature introduced in Next.js 14.
 - The content of this page may be updated as the feature progresses in stability.
 

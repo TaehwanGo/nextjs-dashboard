@@ -1,5 +1,7 @@
 # 15. Adding Authentication
 
+- https://nextjs.org/learn/dashboard-app/adding-authentication
+
 ## In this chapter
 
 - What is authentication

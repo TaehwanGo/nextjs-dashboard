@@ -1,5 +1,7 @@
 # 4. Creating layouts and pages
 
+- https://nextjs.org/learn/dashboard-app/creating-layouts-and-pages
+
 ## In this chapter
 
 - Create the dashboard routes using file-system routing

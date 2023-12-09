@@ -1,5 +1,7 @@
 # 7. Fetching Data
 
+- https://nextjs.org/learn/dashboard-app/fetching-data
+
 ## In this chapter
 
 - Learn about some approches to fetching data: APIs, ORMs, SQL, etc.

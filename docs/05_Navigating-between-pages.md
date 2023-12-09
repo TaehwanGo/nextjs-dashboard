@@ -1,5 +1,7 @@
 # 5. Navigating Between Pages
 
+- https://nextjs.org/learn/dashboard-app/navigating-between-pages
+
 ## In this chapter
 
 - How to use the `next/link` component.

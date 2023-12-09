@@ -1,5 +1,7 @@
 # 12. Mutating data
 
+- https://nextjs.org/learn/dashboard-app/mutating-data
+
 - Let's continue working on the Invoices page by adding the ability to create, update, and delete invoices!
 
 ## In this chapter

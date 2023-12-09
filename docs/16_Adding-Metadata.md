@@ -1,5 +1,7 @@
 # 16. Adding Metadata
 
+- https://nextjs.org/learn/dashboard-app/adding-metadata
+
 - Metadata is crucial for SEO and shareability.
 
 ## In this chapter

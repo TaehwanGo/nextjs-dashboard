@@ -41,4 +41,4 @@ Here's an overview of features you'll learn about in this course:
 - [x] 13. Handling Errors
 - [x] 14. Improving Accessibility
 - [x] 15. Adding Authentication
-- [ ] 16. Adding Metadata
+- [x] 16. Adding Metadata

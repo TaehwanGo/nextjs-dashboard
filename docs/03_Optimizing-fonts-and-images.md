@@ -1,5 +1,7 @@
 # 3. Optimizing fonts and images
 
+- https://nextjs.org/learn/dashboard-app/optimizing-fonts-images
+
 ## In this chapter
 
 - How to add custom fonts with next/font

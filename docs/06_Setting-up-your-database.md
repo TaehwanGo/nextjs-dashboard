@@ -1,5 +1,7 @@
 # 6. Setting up your database
 
+- https://nextjs.org/learn/dashboard-app/setting-up-your-database
+
 ## In this chapter
 
 - Push your project to GitHub.

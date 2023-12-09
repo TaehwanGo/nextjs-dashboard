@@ -1,5 +1,7 @@
 # 11. Adding Search and Pagination
 
+- https://nextjs.org/learn/dashboard-app/adding-search-and-pagination
+
 - `/dashboard/invoices`에서 search와 pagination에 대해 배워보자
 
 ## In this chapter
