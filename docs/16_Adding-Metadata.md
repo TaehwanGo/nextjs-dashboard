@@ -64,3 +64,46 @@
 ```html
 <link rel="icon" href="path/to/favicon.ico" />
 ```
+
+## Adding metadata
+
+- Next.js has a Metadata API that can be used to define your application metadata. There are two ways you can add metadata to your application:
+
+  - Config-based
+    - Export a static metadata object or a dynamic generateMetadata function in a `layout.js` or `page.js` file.
+  - File-based
+    - Next.js has a range of special files that are specifically used for metadata purposes:
+      - `favicon.ico`, `apple-icon.jpg`, and `icon.jpg`: Utilized for favicons and icons
+      - `opengraph-image.jpg` and `twitter-image.jpg`: Employed for social media images
+      - `robots.txt`: Provides instructions for search engine crawling
+      - `sitemap.xml`: Offers information about the website's structure
+
+- You have the flexibility to use these files for static metadata, or you can generate them programmatically within your project.
+- With both these options, Next.js will automatically generate the relevant `<head>` elements for your pages.
+
+### Favicon and Open Graph image
+
+- In your `/public` folder, you'll notice you have two images: `favicon.ico` and `opengraph-image.jpg`.
+- Move these images to the root of your `/app` folder.
+- After doing this, Next.js will automatically identify and use these files as your favicon and OG image. You can verify this by checking the `<head>` element of your application in dev tools.
+
+#### Good to know:
+
+- You can also create dynamic OG images using the [ImageResponse](https://nextjs.org/docs/app/api-reference/functions/image-response) constructor.
+
+### Page title and descriptions
+
+- In your root layout, update the metadata object to include a template:
+
+```tsx
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Acme Dashboard',
+    default: 'Acme Dashboard',
+  },
+  description: 'The official Next.js Learn Dashboard built with App Router.',
+  metadataBase: new URL('https://next-learn-dashboard.vercel.sh'),
+};
+```
