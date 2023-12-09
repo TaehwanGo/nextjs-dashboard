@@ -107,3 +107,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://next-learn-dashboard.vercel.sh'),
 };
 ```
+
+### Practice: Adding metadata
+
+- /login page.
+- /dashboard page.
+- /dashboard/customers page.
+- /dashboard/invoices/create page.
+- /dashboard/invoices/[id]/edit page.
