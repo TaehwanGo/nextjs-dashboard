@@ -4,8 +4,10 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
+import { getUser, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -23,6 +25,34 @@ const FormSchema = z.object({
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string({
+    invalid_type_error: 'Please enter a name.',
+  }),
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long.' })
+    // 특수 문자, 숫자, 대문자, 소문자 각각 1개 이상 포함
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\\\|\[\]{};:\'",.<>\/?]).+$/,
+      {
+        message:
+          'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.',
+      },
+    ),
+});
+
+const CreateUser = UserSchema.omit({ id: true })
+  .extend({
+    passwordConfirmation: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Passwords do not match.',
+    path: ['passwordConfirmation'],
+  });
 
 export type State = {
   errors?: {
@@ -152,4 +182,67 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+// type User = {
+//   id: string;
+//   name: string;
+//   email: string;
+//   password: string;
+// };
+
+// type CreateUserForm = Omit<User, 'id'> & {
+//   passwordConfirmation: string;
+// };
+
+export type CreateUserState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    passwordConfirmation?: string[];
+  };
+  message?: string | null;
+};
+
+export async function signUp(prevState: CreateUserState, formData: FormData) {
+  const validatedUserFields = CreateUser.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+    passwordConfirmation: formData.get('passwordConfirmation'),
+  });
+
+  if (!validatedUserFields.success) {
+    return {
+      errors: validatedUserFields.error.flatten().fieldErrors,
+      message: 'Failed to validate signup data.',
+    };
+  }
+
+  const { name, email, password } = validatedUserFields.data;
+
+  const user = await getUser(email);
+  if (user) {
+    return {
+      message: 'User already exists.',
+    };
+  }
+
+  const id = uuidv4();
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    await sql`
+      INSERT INTO users (id, name, email, password)
+      VALUES (${id}, ${name}, ${email}, ${hashedPassword})
+    `;
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Create User.',
+    };
+  }
+
+  redirect('/login');
 }
