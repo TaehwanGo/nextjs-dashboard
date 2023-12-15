@@ -1,6 +1,7 @@
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
+import DarkModeButton from './ui/dark-mode-button';
 
 export const metadata: Metadata = {
   title: {
@@ -18,7 +19,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body
+        className={`${inter.className} dark:font-white antialiased dark:bg-gray-900`}
+      >
+        {children}
+        {/* floating button for dark mode */}
+        <DarkModeButton />
+      </body>
     </html>
   );
 }
