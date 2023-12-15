@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} dark:font-white antialiased dark:bg-gray-900`}
+        className={`${inter.className} antialiased dark:bg-gray-900 dark:text-white`}
       >
         {children}
         {/* floating button for dark mode */}
